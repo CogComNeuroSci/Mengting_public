@@ -38,7 +38,6 @@ function [deviation, frex, real_amp] = ARSurrSpectByPs(data, srate, n_surrogates
     end
     
     num_ps = size(data,2);
-    %num_frex = floor(size(data,1)/2);
 
     mdl = arima(1, 0, 0);
 
@@ -62,10 +61,6 @@ function [deviation, frex, real_amp] = ARSurrSpectByPs(data, srate, n_surrogates
 end
 
 function [spectrum,frex] = fftSpect(data,samplingRate,pad_to)
-    % Inputs:
-    % data = trials x time
-    % samplingRate
-    % pad_to (in samples)
 
     n = size(data,2);
 
@@ -78,10 +73,9 @@ function [spectrum,frex] = fftSpect(data,samplingRate,pad_to)
         end
     end
 
-    % mean subtraction is required for zero-padding
     data = bsxfun(@minus, data, mean(data,2));
 
-    % --- symmetric zero-padding ---
+    % --- zero-padding ---
     if len > n
         total_pad = len - n;
         pre  = floor(total_pad/2);
@@ -89,7 +83,6 @@ function [spectrum,frex] = fftSpect(data,samplingRate,pad_to)
         data = [zeros(size(data,1), pre), data, zeros(size(data,1), post)];
     end
 
-    % frequency vector
     frex = samplingRate*(0:(len/2))/len;
 
     % FFT 
